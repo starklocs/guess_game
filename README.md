@@ -66,7 +66,7 @@ Utilizamos uma estratégia **round-robin** para distribuir as requisições entr
 ## 🌐 URL de Acesso
 
 A aplicação estará acessível em:  
-**[http://localhost](http://localhost:5000)**
+**[http://localhost:5000](http://localhost:5000)**
 
 ---
 
