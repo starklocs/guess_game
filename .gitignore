@@ -1,9 +1,9 @@
 .venv
 .vscode
-Dockerfile*
-docker-compose*
+#Dockerfile*
+#docker-compose*
 */__pycache__/*
-db/*
+#db/*
 *.sqlite3
 *.pyc
 *.pyo
