@@ -17,9 +17,6 @@ O sistema é composto por quatro componentes principais:
 
 ## ⚙️ Funcionalidades
 
-- Criar um novo jogo com uma senha secreta.
-- Adivinhar a senha e receber feedback sobre as letras corretas e suas posições.
-- Armazenamento seguro das senhas no banco de dados.
 - Balanceamento de carga entre múltiplas instâncias do backend.
 - Reinício automático dos containers em caso de falha.
 
@@ -28,14 +25,14 @@ O sistema é composto por quatro componentes principais:
 ## 📦 Tecnologias Utilizadas
 
 - **Flask:** Simples e eficiente para desenvolver APIs REST.
-- **React:** Flexível e poderoso para interfaces modernas.
-- **Postgres:** Banco de dados confiável e robusto para persistência.
+- **React:** Flexível para interfaces modernas.
+- **Postgres:** Banco de dados confiável para persistência.
 - **NGINX:** Proxy reverso de alta performance e balanceamento de carga.
 - **Docker Compose:** Orquestração e gerenciamento de containers.
 - **Volumes Docker:** Garantem persistência dos dados no Postgres.
 
 ### Estrutura de Balanceamento de Carga
-Utilizamos uma estratégia **round-robin** para distribuir as requisições entre as instâncias do backend.
+Utilizei uma estratégia **round-robin** para distribuir as requisições entre as instâncias do backend.
 
 ---
 
