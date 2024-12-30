@@ -1,26 +1,24 @@
-FROM node:18.17.0 AS build
+FROM node:18 AS build
 
 WORKDIR /app
 
-
-COPY frontend/package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
+# Definir a variável de ambiente para o backend
+ENV REACT_APP_BACKEND_URL=http://localhost:5000
 
-COPY frontend/ .
-
-#build do React
+COPY . .
 RUN npm run build
 
-# Segundo estágio: Nginx
-FROM nginx:latest
+# Etapa final: servidor NGINX
+FROM nginx:alpine
 
-# Copia os arquivos estáticos do build do React
+
+
+# Copiar os arquivos do build do frontend para o NGINX
 COPY --from=build /app/build /usr/share/nginx/html
-
-# Copia o arquivo de configuração do Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 EXPOSE 80
 
+# Iniciar o servidor NGINX
 CMD ["nginx", "-g", "daemon off;"]

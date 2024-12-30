@@ -1,53 +1,81 @@
 version: "3.9"
 services:
-  backend1: # Primeira instância do backend
-    build: ./backend
+  backend1:
+    build:
+      context: .  # Usa o diretório raiz como contexto
     ports:
-      - "5001:5000" # Porta diferente para cada instância
+      - "5000:5000"
     environment:
       - FLASK_APP=run.py
       - FLASK_DB_TYPE=postgres
       - FLASK_DB_USER=postgres
       - FLASK_DB_NAME=guess_game
-      - FLASK_DB_PASSWORD=postgres
-      - FLASK_DB_HOST=db
+      - FLASK_DB_PASSWORD=secretpass
+      - FLASK_DB_HOST=postgres
+      - FLASK_DB_PORT=5432
     depends_on:
-      - db
-    restart: always  # Política de reinício
+      - postgres
+    restart: always
+    networks:
+      - app_network
 
-  backend2: # Segunda instância do backend
-    build: ./backend
+  backend2:
+    build:
+      context: .  # Usa o diretório raiz como contexto
     ports:
-      - "5002:5000" # Porta diferente para cada instância
+      - "5001:5000"
     environment:
       - FLASK_APP=run.py
       - FLASK_DB_TYPE=postgres
       - FLASK_DB_USER=postgres
       - FLASK_DB_NAME=guess_game
-      - FLASK_DB_PASSWORD=postgres
-      - FLASK_DB_HOST=db
+      - FLASK_DB_PASSWORD=secretpass
+      - FLASK_DB_HOST=postgres
+      - FLASK_DB_PORT=5432
     depends_on:
-      - db
-    restart: always  # Política de reinício
-
+      - postgres
+    restart: always
+    networks:
+      - app_network
 
   frontend:
     build:
-      context: .
-      dockerfile: frontend/Dockerfile
+      context: ./frontend
+    ports:
+      - "3000:80"
+    restart: always
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     ports:
       - "80:80"
-    restart: always  # Política de reinício
+    depends_on:
+      - backend1
+      - backend2
+      - frontend
+    restart: always
+    networks:
+      - app_network
 
-  db:
-    image: postgres:latest
+  postgres:
+    image: postgres:14
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=guess_game
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpass
+      POSTGRES_DB: guess_game
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: always  # Política de reinício
-
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - app_network
 volumes:
-  pgdata:
+  postgres_data:
+
+networks:
+  app_network:
